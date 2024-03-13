@@ -3,8 +3,12 @@ macro "Calibrate Auriga" {
 //Zeiss Auriga
 path = getInfo("image.directory") + getInfo("image.filename");
 
-tag = call("TIFF_Tags.getTag", path, 34118);
-i0 = indexOf(tag, "AP_PIXEL_SIZE");
+run("TIFF Dumper");
+tag = getInfo("log");
+selectWindow("Log");
+run("Close");
+
+i0 = indexOf(tag, "AP_IMAGE_PIXEL_SIZE");
 if (i0==-1) exit ("Scale information not found");
 i1 = indexOf(tag, "=", i0);
 i2 = indexOf(tag, "AP", i1);
@@ -29,8 +33,7 @@ else
 getDimensions(width, height, channels, slices, frames);
 sizeParam = width/1024;
 
-pixelSize = mantise/sizeParam*pow(10,exponent);
-// Images from Auriga have bad value of AP_PIXELSIZE when the image is taken at higher resolution (2K, 3K) - thus the division by sizeParam
+pixelSize = mantise*pow(10,exponent);
 
 if (200*pixelSize*sizeParam < 1e-6)
 	setVoxelSize(pixelSize*1e9, pixelSize*1e9, 1, "nm");

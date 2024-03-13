@@ -3,7 +3,11 @@ macro "Calibrate Quanta" {
 //FEI Quanta
 path = getInfo("image.directory") + getInfo("image.filename");
 
-tag = call("TIFF_Tags.getTag", path, 34682);
+run("TIFF Dumper");
+tag = getInfo("log");
+selectWindow("Log");
+run("Close");
+
 i0 = indexOf(tag, "PixelWidth=");
 if (i0==-1) exit ("Scale information not found");
 i1 = indexOf(tag, "=", i0);

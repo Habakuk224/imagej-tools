@@ -1,25 +1,37 @@
 macro "Calibrate Jeol Old" {
-//Gets the tag, and parses it to get the pixel size information
-//Jeol Old
-path = getInfo("image.directory") + getInfo("image.filename");
+	
+// Gets the tag, and parses it to get the pixel size information
+// Jeol Old
 
-tag = call("TIFF_Tags.getTag", path, 37000);
-mantise = parseFloat(tag);
-
-tag = call("TIFF_Tags.getTag", path, 37001);
-tokens = split(tag,",");
-exponent = parseInt(tokens[1]);
-unit_exp = parseInt(tokens[2]);
-
-muChar = fromCharCode(0xb5);
 recChar = fromCharCode(0x207b)+fromCharCode(0xb9);
 
-unit_prefix_array = newArray("n", muChar, "m", "", "k");
-unit_exp_array = newArray(recChar, "", "");
+path = getInfo("image.directory") + getInfo("image.filename");
 
-unit = unit_prefix_array[exponent/3+3] + "m" + unit_exp_array[unit_exp+1];
+run("Bio-Formats Macro Extensions");
+Ext.setId(path);
+Ext.getPixelsPhysicalSizeX(pixelSize) // pixel size in um (imaging) or 1/um (diffraction)
+Ext.getMetadataValue("Camera name",mode)
 
-setVoxelSize(mantise, mantise, 1, unit);
+getDimensions(width, height, channels, slices, frames);
+sizeParam = width/1024;
+
+if (mode == "Diff") {
+	pixelSize = pixelSize * 1e3; // pixel size in 1/um -> 1/nm
+	unit = "nm" + recChar;
+} else {
+	if (mode == "Mag") {
+		if (200*pixelSize*sizeParam > 0.8) {
+			unit = "um";
+		} else {
+			pixelSize = pixelSize * 1e3; // pixel size um -> nm
+			unit = "nm";
+		}		
+	} else {
+		exit("Unknown camera mode");
+	} 
+}
+
+setVoxelSize(pixelSize, pixelSize, 1, unit);
 
 savePath = getInfo("image.directory") + "cal_" + getInfo("image.filename");
 savePath = replace(savePath, "\\", "/");

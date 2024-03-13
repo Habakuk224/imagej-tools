@@ -59,7 +59,7 @@ if ((bitDepth() == 16) || (bitDepth() == 32)) {
 
 if (SB) {
 	makeRectangle(0.02*width*col_factor, height-9.5*SB_h, 1, 1);
-	SB_ls = String.format("%#1.0f", SB_l);
+	SB_ls = String.format("%1.0f", SB_l); // for some reason, run(Scale Bar...) does not handle decimal numbers well
 	SB_ldot = replace(SB_ls, ",", ".");
 	run("Scale Bar...", "width="+SB_ldot+" height="+SB_h+" font="+SB_font+" color=Black background=White location=[At Selection] bold");	
 }

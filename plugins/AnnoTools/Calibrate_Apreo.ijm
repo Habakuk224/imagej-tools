@@ -5,7 +5,8 @@ path = getInfo("image.directory") + getInfo("image.filename");
 
 run("TIFF Dumper");
 tag = getInfo("log");
-
+selectWindow("Log");
+run("Close");
 
 i0 = indexOf(tag, "PixelWidth=");
 if (i0==-1) exit ("Scale information not found");
@@ -49,9 +50,6 @@ if (200*pixelSize*sizeParam < 1e-6)
 	setVoxelSize(pixelSize*1e9, pixelSize*1e9, 1, "nm");
 else
 	setVoxelSize(pixelSize*1e6, pixelSize*1e6, 1, "um");
-
-selectWindow("Log");
-run("Close");
 
 savePath = getInfo("image.directory") + "cal_" + getInfo("image.filename");
 savePath = replace(savePath, "\\", "/");

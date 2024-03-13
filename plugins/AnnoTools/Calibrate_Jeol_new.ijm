@@ -10,6 +10,7 @@ i2 = indexOf(infoData, "\n", i1);
 
 unit = substring(infoData,i1+2,i2);
 
+// reciprocal nm as nm^{-1}
 if( startsWith(unit,'1/') ) {
 	recChar = fromCharCode(0x207b)+fromCharCode(0xb9);
 	unit = substring(unit, 2, 4) + recChar;
