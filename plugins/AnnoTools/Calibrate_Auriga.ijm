@@ -23,12 +23,11 @@ tokens = split(text," ");
 mantise = parseFloat(tokens[0]);
 unit = tokens[1];
 
+// only nm or um are assumed, as dealing with the micro sign is somewhat tricky
 if (unit=="nm")
 	exponent = -9;
-else if (unit=="um" || unit=="µm")
-	exponent = -6;
 else
-	exit ("Unknown unit.");
+	exponent = -6;
 
 getDimensions(width, height, channels, slices, frames);
 sizeParam = width/1024;
